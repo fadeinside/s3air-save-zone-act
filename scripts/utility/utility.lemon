@@ -5,21 +5,81 @@ function void UpdateLevelDisplay()
 	// Slot address load
 	u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
 	
-	// Setup A0
-	A0 = slotAddress
+	// Slot data address load
+	u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 	
 	// Load saved act
-	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct()
+	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
 	
-	// Save current act, if the current and saved act do not match
-	if (global.zone_act > loadSavedAct)
+	// Save current act
+	// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act is greater than the saved one
+	if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (global.zone_act > loadSavedAct))
 	{
-		SaveZoneAct.Data.saveCurrentZoneAct()
-		System.writeDisplayLine(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, A0))
+		SaveZoneAct.Data.saveCurrentZoneAct(slotAddress)
+		//System.writeDisplayLine(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, A0))
 	}
 	
 	// Call the base function
 	base.UpdateLevelDisplay()
+}
+
+//@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
+//# address-hook(0x00d8c4) end(0x00d90c)
+function void fn00d8c4()
+{
+	if ((control.pad1.pressed & CONTROL_RIGHT) == 0x00)
+	{
+		if ((control.pad1.pressed & CONTROL_LEFT) == 0x00)
+		{
+			DrawObject()
+			return
+		}
+		
+		// Slot address load
+		u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
+		
+		// Get saved data from PersistentData
+		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
+		
+		// Check if you have saved data
+		if (loadSavedAct > 0x0000)
+		{
+			SaveZoneAct.Data.resetSavedZoneAct(slotAddress)
+			//System.writeDisplayLine("Saved zone act deleted")
+		}
+	}
+	
+	// Call the base function
+	base.fn00d8c4()
+}
+
+//@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
+//# address-hook(0x00d7c0) end(0x00d7e6)
+function void fn00d7c0()
+{
+	// Loop simulates slots
+	for (u8 slot = 0x00; slot < 0x08; ++slot)
+	{
+		// Slot address load
+		u32 slotAddress = 0xffffb128 + (0x4a * slot)
+		
+		// Slot data address load
+		u32 slotDataAddress = 0xffffe6ac + (0x0a * slot)
+		
+		// Get saved data from PersistentData
+		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
+		
+		// Check if this slot is non-completed
+		if (u8[slotDataAddress + 0x00] == 0x00)
+		{
+			u8[slotAddress + 0x0c] = getchar(stringformat("%04x", loadSavedAct), 0x03) - 47
+		}
+		
+		//debugLog(stringformat("Zone act : %d", u8[slotAddress + 0x0c]))
+	}
+	
+	// Call base function
+	base.fn00d7c0()
 }
 
 //@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
@@ -129,6 +189,7 @@ function bool fn00d458()
 			return 0x02
 
 		level.giantrings_clear.u16 = u16[A1 + 0x04]
+		
 		if (objA0.value3b == 0x00)
 			D0.u8 = u8[A1 + 0x03]
 		else
@@ -142,10 +203,35 @@ function bool fn00d458()
 		
 		fn00da4e()
 		
-		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct()
-		if (loadSavedAct != 0x0000)
+		// Here we do some checks to know if the saved act zone is worth loading or not
+		// - We load the zone act if it is saved, and if the current slot is non-completed
 		{
-			D0.u16 = loadSavedAct
+			// Slot data address load
+			u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
+			
+			// Get saved data from PersistentData
+			u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(A0)
+			
+			// Check if this slot is non-completed
+			if (u8[slotDataAddress + 0x00] == 0x00)
+			{
+				// Check if you have saved data, if so, use it to loading
+				if (loadSavedAct > 0x0000)
+				{
+					D0.u16 = loadSavedAct
+					//System.writeDisplayLine("Saved zone act loaded")
+				}
+			}
+			// If the slot is complete, then reset the saved data, as it is no longer necessary to use them
+			else
+			{
+				// Check if you have saved data
+				if (loadSavedAct > 0x0000)
+				{
+					SaveZoneAct.Data.resetSavedZoneAct(A0)
+					//System.writeDisplayLine("Saved zone act deleted")
+				}
+			}
 		}
 		
 		global.zone_act = D0.u16

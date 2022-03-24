@@ -1,0 +1,16 @@
+{
+	// "Act" text
+	"dataSel_saveslot_act": { "File": "dataselect_objects.png", "Rect": "1,10,26,8", "Center": "13,8" },
+	
+	// "0 ~ 9" numbers
+	"dataSel_saveslot_number_0": { "File": "dataselect_objects.png", "Rect": "1,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_1": { "File": "dataselect_objects.png", "Rect": "10,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_2": { "File": "dataselect_objects.png", "Rect": "19,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_3": { "File": "dataselect_objects.png", "Rect": "28,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_4": { "File": "dataselect_objects.png", "Rect": "37,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_5": { "File": "dataselect_objects.png", "Rect": "47,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_6": { "File": "dataselect_objects.png", "Rect": "55,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_7": { "File": "dataselect_objects.png", "Rect": "64,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_8": { "File": "dataselect_objects.png", "Rect": "73,1,8,8", "Center": "0,8" },
+	"dataSel_saveslot_number_9": { "File": "dataselect_objects.png", "Rect": "82,1,8,8", "Center": "0,8" }
+}
