@@ -1,3 +1,4 @@
+//? Loads the zone act from PersistentData.
 function u16 SaveZoneAct.Data.loadSavedZoneAct()
 {
 	// A0 this is the address of the loaded slot
@@ -6,6 +7,7 @@ function u16 SaveZoneAct.Data.loadSavedZoneAct()
 	return u16[A0 + 0x38]
 }
 
+//? Saves the current zone act to PersistentData.
 function void SaveZoneAct.Data.saveCurrentZoneAct()
 {
 	// A0 this is the address of the loaded slot
