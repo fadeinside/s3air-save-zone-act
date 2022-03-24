@@ -1,0 +1,15 @@
+function u16 SaveZoneAct.Data.loadSavedZoneAct()
+{
+	// A0 this is the address of the loaded slot
+	System.loadPersistentData(A0 + 0x38, stringformat("SRAM_SaveZoneAct_0x%06x", A0), 0x04)
+	
+	return u16[A0 + 0x38]
+}
+
+function void SaveZoneAct.Data.saveCurrentZoneAct()
+{
+	// A0 this is the address of the loaded slot
+	u16[A0 + 0x38] = global.zone_act
+	
+	System.savePersistentData(A0 + 0x38, stringformat("SRAM_SaveZoneAct_0x%06x", A0), 0x04)
+}
