@@ -12,8 +12,9 @@ function void UpdateLevelDisplay()
 	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
 	
 	// Save current act
-	// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act is greater than the saved one
-	if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (global.zone_act > loadSavedAct))
+	// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act is greater than the saved one, but is not a bonus or competition stage
+	bool isNotBonusStages = !(global.zone == 0x0e || global.zone == 0x0f || global.zone == 0x10 || global.zone == 0x11 || global.zone == 0x12 || global.zone == 0x13 || global.zone == 0x14 || global.zone == 0x15)
+	if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (global.zone_act > loadSavedAct) && isNotBonusStages)
 	{
 		SaveZoneAct.Data.saveCurrentZoneAct(slotAddress)
 		//System.writeDisplayLine(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, A0))
@@ -206,14 +207,31 @@ function bool fn00d458()
 		
 		fn00da4e()
 		
+		// Here we fix the problem of the v1.0.0 release, when the bonus stage was saved, and you could not get out of it. Here we set up-to-date zone data stored in VRAM for PersistentData. Sorry again for that.
+		{
+			// Get saved data from PersistentData
+			u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(A0)
+			
+			// Get data on whether the bonus stage was saved
+			u8 getZoneID = loadSavedAct / 0x100
+			bool savedBonusStage = (getZoneID == 0x0e || getZoneID == 0x0f || getZoneID == 0x10 || getZoneID == 0x11 || getZoneID == 0x12 || getZoneID == 0x13 || getZoneID == 0x14 || getZoneID == 0x15)
+			
+			// Check if this slot saved a bonus stage
+			if (savedBonusStage)
+			{
+				SaveZoneAct.Data.resetSavedZoneAct(A0)
+				//System.writeDisplayLine("Saved zone act deleted")
+			}
+		}
+		
 		// Here we do some checks to know if the saved act zone is worth loading or not
 		// - We load the zone act if it is saved, and if the current slot is non-completed
 		{
-			// Slot data address load
-			u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
-			
 			// Get saved data from PersistentData
 			u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(A0)
+			
+			// Slot data address load
+			u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 			
 			// Check if this slot is non-completed
 			if (u8[slotDataAddress + 0x00] == 0x00)
