@@ -47,6 +47,9 @@ function void fn00d8c4()
 			SaveZoneAct.Data.resetSavedZoneAct(slotAddress)
 			System.writeDisplayLine("Saved zone act deleted")
 		}
+		
+		// Here we are set a temporary value to the addresses when slot was been deleted
+		u8[slotAddress + 0x08] = 0x01
 	}
 	
 	// Call the base function
