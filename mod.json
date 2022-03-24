@@ -4,7 +4,7 @@
 		"Name": "Save second act of last zone",
 		"Author": "FadeInside" ,
 		"Description": "Save the second act of the zone after closing the game. Do not deny yourself the pleasure of closing the game during the second act, making a tea, and enjoying the evening watching a movie.\nNeed \"Data Select Sprites Mod Support\" mod to work.",
-		"URL": "https://gamebanana.com/members/2008527",
+		"URL": "https://github.com/fadeinside/s3air-save-zone-act",
 		"ModVersion": "1.0.0",
 		"GameVersion": "21.09.28.0"
 	}

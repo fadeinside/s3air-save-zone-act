@@ -45,7 +45,7 @@ function void fn00d8c4()
 		if (loadSavedAct > 0x0000)
 		{
 			SaveZoneAct.Data.resetSavedZoneAct(slotAddress)
-			System.writeDisplayLine("Saved zone act deleted")
+			//System.writeDisplayLine("Saved zone act deleted")
 		}
 		
 		// Here we are set a temporary value to the addresses when slot was been deleted
