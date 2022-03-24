@@ -1,0 +1,234 @@
+//# address-hook(0x04e408) end(0x04e456)
+function void UpdateLevelDisplay()
+{
+	// Slot address load
+	u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
+	
+	// Setup A0
+	A0 = slotAddress
+	
+	// Load saved act
+	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct()
+	
+	// Save current act, if the current and saved act do not match
+	if (global.zone_act > loadSavedAct)
+	{
+		SaveZoneAct.Data.saveCurrentZoneAct()
+		System.writeDisplayLine(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, A0))
+	}
+	
+	// Call the base function
+	base.UpdateLevelDisplay()
+} 
+
+function bool fn00d458()
+{
+	// Result values:
+	// - 0 = Abort outer function
+	// - 1 = Allow character selection (up/down)
+	// - 2 = Continue normally outside
+
+	if (u8[A1] & 0x80)
+	{
+		// Empty save slot
+		u8[A0 + 0x1d] = 0x0f
+		objA0.animation.frame = 0
+		if (u16[0xffffb078] != 0 || u16[0xffffeee4] != 0)
+		{
+			return 2
+		}
+		else
+		{
+			return 1
+		}
+	}
+	else
+	{
+		// Used save slot
+		D1.u16 = u16[A0 + 0x36]
+		fn00d96a()
+
+		objA0.animation.frame = 0x17
+		D1.u16 = u16[A0 + 0x36]
+		if (D1.u8 == objA0.value3a && objA0.value3b != 0)
+		{
+			// This gets entered only for completed games
+			if (objA0.value3b == 1)
+			{
+				++objA0.animation.frame
+			}
+			else if (objA0.value3b == 2)
+			{
+				objA0.animation.frame += 2
+			}
+			else
+			{
+				objA0.animation.frame += 4
+			}
+
+			if (objA0.value3b == 1 || objA0.value3b == 2)
+			{
+				if (u16[A0 + 0x34] >= CHARS_TAILS_ALONE)	// It feels strange that this is the same for Tails and Knuckles
+				{
+					objA0.animation.frame = 0x23
+				}
+			}
+		}
+
+		if (u16[A0 + 0x38] == 0 && objA0.value3b == 0)
+		{
+			if (u16[0xffffb078] != 0)
+			{
+				return 2
+			}
+
+			u8[A0 + 0x1d] = 0
+		}
+		else
+		{
+			if (u16[A0 + 0x38] == 0)
+			{
+				objA0.flags38 = 0xff
+			}
+
+			if (u16[0xffffb078] != 0)
+			{
+				return 2
+			}
+
+			if (u16[0xffffeee4] != 0)
+			{
+				u8[A0 + 0x1d] = 0
+				u16[A0 + 0x16] = 2
+				return 2
+			}
+
+			if (u16[A0 + 0x34] >= CHARS_KNUCKLES_ALONE)		// Originally this is only an equality check
+			{
+				D6 = 0x0b
+			}
+			else if (u16[A0 + 0x34] == CHARS_TAILS_ALONE || objA0.value3b < 2)
+			{
+				D6 = 0x0c
+			}
+			else
+			{
+				D6 = 0x0d
+			}
+
+			D1.u16 = u16[A0 + 0x36]
+			if (control.pad1.pressed & CONTROL_DOWN)
+			{
+				playSound(0x5b)
+				--D1.u16
+				if (D1.s16 < 0)
+				{
+					D1.u16 = D6.u16
+				}
+			}
+			else if (control.pad1.pressed & CONTROL_UP)
+			{
+				playSound(0x5b)
+				++D1.u16
+				if (D1.u16 > D6.u16)
+				{
+					D1 = 0
+				}
+			}
+
+			u16[A0 + 0x36] = D1.u16
+			u8[A0 + 0x1d] = (level.framecounter.low & 0x10) ? 0x1a : 0
+		}
+
+		u16[A0 + 0x16] = 2
+		if (u16[0xffffeee4] != 0)
+		{
+			return 2
+		}
+		if ((control.pad1.pressed & DataSelect.CONTROLS_ACCEPT) == 0)
+		{
+			return 2
+		}
+
+		level.giantrings_clear.u16 = u16[A1 + 0x04]
+		if (objA0.value3b == 0)
+		{
+			D0.u8 = u8[A1 + 0x03]
+		}
+		else
+		{
+			D0.u16 = u16[A0 + 0x36]
+			if (D0.u8 >= objA0.value3a)
+			{
+				return 2
+			}
+			level.giantrings_clear = 0
+		}
+		fn00da4e()
+		
+		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct()
+		
+		if (loadSavedAct != 0x0000)
+		{
+			D0.u16 = loadSavedAct
+		}
+		
+		global.zone_act = D0.u16
+		global.zone_act.apparent = D0.u16
+		
+		levelselect.characters  = (u8[A1 + 0x02] >> 0x04)
+		global.next_bluespheres = (u8[A1 + 0x02] & 0x0f)
+
+		D0 = u16[A1 + 0x06]
+		A2 = 0xffffffb2
+		fn00da1e()
+		global.chaos_emeralds = D1.u8
+		global.super_emeralds = D2.u8
+		
+	#if STANDALONE
+		global.game_random_base = u8[A1 + 0x01]
+		if (global.game_random_base == 0)
+		{
+			// Intentionally not using the (more deterministic) "getRandomNumber" here
+			global.game_random_base = 1 + (System.rand() % 0xff)		// Avoid the 0 value
+		}
+	#endif
+
+		global.active_saveslot = A1
+		DataSelect.SharedGameSlotContinue()
+
+		D0.u8 = u8[A1 + 0x08]
+		if ((D0.u8 == 0) || (D0.u8 < 3 && u8[A1 + 0x09] == 0))
+		{
+			u8[A1 + 0x08] = 3
+			if (u8[A1 + 0x09] > 0)
+				--u8[A1 + 0x09]
+		}
+
+		lives_counter = u8[A1 + 0x08]
+		continues_counter = u8[A1 + 0x09]
+
+	#if STANDALONE
+		if (continues_counter >= 5)
+		{
+			Game.setAchievementComplete(ACHIEVEMENT_CONTINUES)
+		}
+
+		// Load additional data
+		u32 slotIndex = (A1 - 0xffffe6ac) / 0x0a
+		u32 address = 0x801100 + slotIndex * 0x20
+		if (u8[A1] == 0)
+		{
+			// Load score, but only for non-completed games
+			player.score = u32[address]
+			player.next_life_score = (player.score / 5000 + 1) * 5000
+		}
+	#endif
+
+		u8[0xffffef56] = 0xff
+		SaveGameSlot()
+		global.game_mode = 0x0c
+		DrawObject()
+		return 0
+	}
+}
