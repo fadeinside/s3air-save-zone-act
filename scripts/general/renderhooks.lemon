@@ -6,13 +6,23 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		{
 			u64 key
 			
-			key = "dataSel_saveslot_act"
+			if (Mods.isModActive("Sonic 3 Complete Font"))
+				key = "dataSel_saveslot_actComplete"
+			else
+				key = "dataSel_saveslot_act"
+			
+			// Check if the sprite exists
 			if (Renderer.hasCustomSprite(key))
 			{
 				Renderer.drawCustomSprite(key, px - 8, py - (MenuStyle.dataSelect == MenuStyle.dataSelect.Sonic3 ? 48 : 40), 0x00, SPRITE_FLAG_PRIO, 0xffff)
 			}
 			
-			key = stringformat("dataSel_saveslot_number_%d", u8[A0 + 0x0c]) 
+			if (Mods.isModActive("Sonic 3 Complete Font"))
+				key = stringformat("dataSel_saveslot_numberComplete_%d", u8[A0 + 0x0c])
+			else
+				key = stringformat("dataSel_saveslot_number_%d", u8[A0 + 0x0c])
+			
+			// Check if the sprite exists
 			if (Renderer.hasCustomSprite(key))
 			{
 				Renderer.drawCustomSprite(key, px + 16, py - (MenuStyle.dataSelect == MenuStyle.dataSelect.Sonic3 ? 48 : 40), 0x00, SPRITE_FLAG_PRIO, 0xffff)

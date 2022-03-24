@@ -1,6 +1,8 @@
 {
 	// "Act" text
 	"dataSel_saveslot_act": { "File": "dataselect_objects.png", "Rect": "1,10,26,8", "Center": "13,8" },
+	// "Act" text (Needed Sonic 3 Complete Font mod)
+	"dataSel_saveslot_actComplete": { "File": "dataselect_objects.png", "Rect": "1,28,26,8", "Center": "13,8" },
 	
 	// "0 ~ 9" numbers
 	"dataSel_saveslot_number_0": { "File": "dataselect_objects.png", "Rect": "1,1,8,8", "Center": "0,8" },
@@ -12,5 +14,17 @@
 	"dataSel_saveslot_number_6": { "File": "dataselect_objects.png", "Rect": "55,1,8,8", "Center": "0,8" },
 	"dataSel_saveslot_number_7": { "File": "dataselect_objects.png", "Rect": "64,1,8,8", "Center": "0,8" },
 	"dataSel_saveslot_number_8": { "File": "dataselect_objects.png", "Rect": "73,1,8,8", "Center": "0,8" },
-	"dataSel_saveslot_number_9": { "File": "dataselect_objects.png", "Rect": "82,1,8,8", "Center": "0,8" }
+	"dataSel_saveslot_number_9": { "File": "dataselect_objects.png", "Rect": "82,1,8,8", "Center": "0,8" },
+	
+	// "0 ~ 9" numbers (Needed Sonic 3 Complete Font mod)
+	"dataSel_saveslot_numberComplete_0": { "File": "dataselect_objects.png", "Rect": "1,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_1": { "File": "dataselect_objects.png", "Rect": "10,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_2": { "File": "dataselect_objects.png", "Rect": "19,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_3": { "File": "dataselect_objects.png", "Rect": "28,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_4": { "File": "dataselect_objects.png", "Rect": "37,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_5": { "File": "dataselect_objects.png", "Rect": "47,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_6": { "File": "dataselect_objects.png", "Rect": "55,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_7": { "File": "dataselect_objects.png", "Rect": "64,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_8": { "File": "dataselect_objects.png", "Rect": "73,19,8,8", "Center": "0,8" },
+	"dataSel_saveslot_numberComplete_9": { "File": "dataselect_objects.png", "Rect": "82,19,8,8", "Center": "0,8" }
 }
