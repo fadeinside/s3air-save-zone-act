@@ -1,34 +1,38 @@
 function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
-	if (objA0.update_address == 0x00d42c)
+	if ((global.game_mode & 0x7f) == 0x4c || (global.game_mode & 0x7f) == 0x0c)
 	{
-		if (u8[A0 + 0x0c] != 0x00 && u8[A0 + 0x08] != 0x01)
+		if (objA0.update_address == 0x00d42c)
 		{
-			u64 key
-			
-			if (Mods.isModActive("Sonic 3 Complete Font"))
-				key = "dataSel_saveslot_actComplete"
-			else
-				key = "dataSel_saveslot_act"
-			
-			// Check if the sprite exists
-			if (Renderer.hasCustomSprite(key))
+			if (u8[A0 + 0x70] != 0x00 && u8[A0 + 0x08] != 0x01)
 			{
-				Renderer.drawCustomSprite(key, px - 8, py - (MenuStyle.dataSelect == MenuStyle.dataSelect.Sonic3 ? 48 : 40), 0x00, SPRITE_FLAG_PRIO, 0xffff)
-			}
+				u64 key
+				
+				// "Sonic 3 Complete Font" by Retro, check https://gamebanana.com/mods/334378
+				// "Sonic 3 Complete Sound Test" by mrgrassman14, check https://gamebanana.com/mods/361615
+				if (Mods.isModActive("Sonic 3 Complete Font") || Mods.isModActive("Sonic 3 Complete Sound Test"))
+					key = "dataSel_saveslot_actComplete"
+				else
+					key = "dataSel_saveslot_act"
 			
-			if (Mods.isModActive("Sonic 3 Complete Font"))
-				key = stringformat("dataSel_saveslot_numberComplete_%d", u8[A0 + 0x0c])
-			else
-				key = stringformat("dataSel_saveslot_number_%d", u8[A0 + 0x0c])
-			
-			// Check if the sprite exists
-			if (Renderer.hasCustomSprite(key))
-			{
-				Renderer.drawCustomSprite(key, px + 16, py - (MenuStyle.dataSelect == MenuStyle.dataSelect.Sonic3 ? 48 : 40), 0x00, SPRITE_FLAG_PRIO, 0xffff)
+				// Check if the sprite exists
+				if (Renderer.hasCustomSprite(key))
+					Renderer.drawCustomSprite(key, px - 0x08, py - (MenuStyle.dataSelect == 0x00 ? 48 : 40), 0x00, SPRITE_FLAG_PRIO, 0xffff)
+				
+				// "Sonic 3 Complete Font" by Retro, check https://gamebanana.com/mods/334378
+				// "Sonic 3 Complete Sound Test" by mrgrassman14, check https://gamebanana.com/mods/361615
+				if (Mods.isModActive("Sonic 3 Complete Font") || Mods.isModActive("Sonic 3 Complete Sound Test"))
+					key = stringformat("dataSel_saveslot_numberComplete_%d", u8[A0 + 0x70])
+				else
+					key = stringformat("dataSel_saveslot_number_%d", u8[A0 + 0x70])
+				
+				// Check if the sprite exists
+				if (Renderer.hasCustomSprite(key))
+					Renderer.drawCustomSprite(key, px + 0x10, py - (MenuStyle.dataSelect == 0x00 ? 48 : 40), 0x00, SPRITE_FLAG_PRIO, 0xffff)
 			}
 		}
 	}
 	
+	// Return the base function
 	return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
 }

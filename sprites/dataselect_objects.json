@@ -1,4 +1,8 @@
 {
+	// Experiments
+	"dataSel_portait_AIZ2": { "File": "saveSel_portait_AIZ2.png", "Rect": "0,0,80,56", "Center": "0,0" },
+	
+	//-----------
 	// "Act" text
 	"dataSel_saveslot_act": { "File": "dataselect_objects.png", "Rect": "1,10,26,8", "Center": "13,8" },
 	// "Act" text (Needed Sonic 3 Complete Font mod)

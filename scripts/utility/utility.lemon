@@ -2,22 +2,26 @@
 //# address-hook(0x04e408) end(0x04e456)
 function void UpdateLevelDisplay()
 {
-	// Slot address load
-	u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
-	
-	// Slot data address load
-	u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
-	
-	// Load saved act
-	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
-	
-	// Save current act
-	// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act is greater than the saved one, but is not a bonus or competition stage
+	// Check if this is not a bonus stage, if it is a bonus stage, then do not take any action
 	bool isNotBonusStages = !(global.zone == 0x0e || global.zone == 0x0f || global.zone == 0x10 || global.zone == 0x11 || global.zone == 0x12 || global.zone == 0x13 || global.zone == 0x14 || global.zone == 0x15)
-	if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (global.zone_act > loadSavedAct) && isNotBonusStages)
+	if (isNotBonusStages)
 	{
-		SaveZoneAct.Data.saveCurrentZoneAct(slotAddress)
-		//System.writeDisplayLine(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, A0))
+		// Slot address load
+		u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
+		
+		// Slot data address load
+		u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
+		
+		// Load saved act
+		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
+		
+		// Save current act
+		// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act is greater than the saved one
+		if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (global.zone_act > loadSavedAct))
+		{
+			SaveZoneAct.Data.saveCurrentZoneAct(slotAddress)
+			//System.writeDisplayLine(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, A0))
+		}
 	}
 	
 	// Call the base function
@@ -58,9 +62,12 @@ function void fn00d8c4()
 }
 
 //@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
-//# address-hook(0x00d7c0) end(0x00d7e6)
-function void fn00d7c0()
+//# address-hook(0x00d790) end(0x00d790)
+function void fn00d790()
 {
+	// Call base function
+	base.fn00d790()
+	
 	// Loop simulates slots
 	for (u8 slot = 0x00; slot < 0x08; ++slot)
 	{
@@ -76,14 +83,12 @@ function void fn00d7c0()
 		// Check if this slot is non-completed
 		if (u8[slotDataAddress + 0x00] == 0x00)
 		{
-			u8[slotAddress + 0x0c] = getchar(stringformat("%04x", loadSavedAct), 0x03) - 47
+			u8 getActID = getchar(stringformat("%04x", loadSavedAct), 0x03) - 47
+			u8[slotAddress + 0x70] = getActID
 		}
 		
-		//debugLog(stringformat("Zone act : %d", u8[slotAddress + 0x0c]))
+		//debugLog(stringformat("Save slot : Act %d", u8[slotAddress + 0x70]))
 	}
-	
-	// Call base function
-	base.fn00d7c0()
 }
 
 //@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
@@ -207,7 +212,8 @@ function bool fn00d458()
 		
 		fn00da4e()
 		
-		// Here we fix the problem of the v1.0.0 release, when the bonus stage was saved, and you could not get out of it. Here we set up-to-date zone data stored in VRAM for PersistentData. Sorry again for that.
+		// Here we fix the problem of the v1.0.0 release, when the bonus stage was saved as main one, and you could not get out of it.
+		// - We will delete the saved data for the slot that saved the bonus stage as the main level, then the launch will be made from the stored VRAM level, and after, the second act will be saved in normal mode.
 		{
 			// Get saved data from PersistentData
 			u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(A0)
