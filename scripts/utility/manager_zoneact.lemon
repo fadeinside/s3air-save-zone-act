@@ -1,24 +1,29 @@
 //? Load the zone act from PersistentData based on the specified address.
 function u16 SaveZoneAct.Data.loadSavedZoneAct(u32 address)
 {
+	// Load address value from PersistentData
 	System.loadPersistentData(address + 0x40, stringformat("SRAM_SaveZoneAct_0x%06x", address), 0x04)
 	
-	// Return value
+	// Return address value
 	return u16[address + 0x40]
 }
 
 //? Saves the current zone act to PersistentData based on the specified address.
-function void SaveZoneAct.Data.saveCurrentZoneAct(u32 address)
+function void SaveZoneAct.Data.saveCurrentZoneAct(u32 address, u16 value)
 {
-	u16[address + 0x40] = global.zone_act
+	// Assign a value to an address
+	u16[address + 0x40] = value
 	
+	// Save address value in PersistentData
 	System.savePersistentData(address + 0x40, stringformat("SRAM_SaveZoneAct_0x%06x", address), 0x04)
 }
 
 //? Reset the saved zone act for the current slot based on the specified address.
 function void SaveZoneAct.Data.resetSavedZoneAct(u32 address)
 {
+	// Assign a value to an address
 	u16[address + 0x40] = 0x0000
 	
-	System.savePersistentData(address + 0x40, stringformat("SRAM_SaveZoneAct_0x%06x", address), 0)
+	// Save address value in PersistentData
+	System.savePersistentData(address + 0x40, stringformat("SRAM_SaveZoneAct_0x%06x", address), 0x00)
 }

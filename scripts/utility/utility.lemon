@@ -1,45 +1,96 @@
-//@ Function taken from sonic3air_dev/scripts/level/level_display.lemon
-//# address-hook(0x04e408) end(0x04e456)
-function void UpdateLevelDisplay()
+define bool SHOW_DEBUG_LOGS	= false	// If true, the logs will be shown
+
+//? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
+function void SaveZoneAct.onChangingZones()
 {
-	// Check if this is not a bonus stage, if it is a bonus stage, then do not take any action
-	bool isNotBonusStages = !(global.zone == 0x0e || global.zone == 0x0f || global.zone == 0x10 || global.zone == 0x11 || global.zone == 0x12 || global.zone == 0x13 || global.zone == 0x14 || global.zone == 0x15)
-	if (isNotBonusStages)
+	// Slot address load
+	u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
+	
+	// Slot data address load
+	u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
+	
+	// Load saved act
+	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
+	
+	// Save current act
+	// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act not match with the saved one
+	if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (loadSavedAct != global.zone_act))
 	{
-		// Slot address load
-		u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
-		
-		// Slot data address load
-		u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
-		
-		// Load saved act
-		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
-		
-		// Save current act
-		// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act is greater than the saved one
-		if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (global.zone_act > loadSavedAct))
-		{
-			SaveZoneAct.Data.saveCurrentZoneAct(slotAddress)
-			//System.writeDisplayLine(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, A0))
-		}
+		SaveZoneAct.Data.saveCurrentZoneAct(slotAddress, global.zone_act)
+		if (SHOW_DEBUG_LOGS)
+			debugLog(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, slotAddress))
 	}
+}
+
+//@ Function taken from sonic3air_dev/scripts/standalone/gamecallbacks.lemon
+function void Standalone.onLevelStart()
+{
+	SaveZoneAct.onChangingZones()
 	
 	// Call the base function
-	base.UpdateLevelDisplay()
+	base.Standalone.onLevelStart()
+}
+
+//@ Function taken from sonic3air_dev/scripts/standalone/gamecallbacks.lemon
+function void Standalone.onLevelFinished()
+{
+	SaveZoneAct.onChangingZones()
+	
+	// Call the base function
+	base.Standalone.onLevelFinished()
+}
+
+//@ Function taken from sonic3air_dev/scripts/level/level_display.lemon
+//# address-hook(0x00c434) end(0x00c4d0)
+function void SaveGameOnLevelFinished()
+{
+	SaveZoneAct.onChangingZones()
+	
+	// Call the base function
+	base.SaveGameOnLevelFinished()
+}
+
+//? Returns the actual ID of the zone, matching the portait art zone in Data Select.
+function u8 SaveZoneAct.getActualZoneID(u32 address)
+{
+	// Setup variables
+	u8 zoneID = u16[address + 0x36]
+	u8 actualZoneID = zoneID
+	
+	// Check if Original zone order mod is active
+	if !(Mods.isModActive("Original zone order"))
+	{
+		if (zoneID >= 0x04 && zoneID <= 0x06)
+			++actualZoneID
+		else if (zoneID == 0x07)
+			actualZoneID = 0x04
+	}
+	
+	// Zone Identification fix
+	if (zoneID == 0x0a)
+		actualZoneID = 0x16
+	else if (zoneID == 0x0b)
+		actualZoneID = 0x0a
+	else if (zoneID == 0x0c)
+		actualZoneID = 0x0b
+	else if (zoneID == 0x0d)
+		actualZoneID = 0x0c
+	
+	// Return value
+	return actualZoneID
 }
 
 //@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
 //# address-hook(0x00d8c4) end(0x00d90c)
 function void fn00d8c4()
 {
-	if ((control.pad1.pressed & CONTROL_RIGHT) == 0x00)
+	// Show the small announcement from the bottom left
+	System.writeDisplayLine("> Press the [UP] key to delete only the saved act")
+	
+	// Deletion of saved data by Eggman (ТМ)
+	// - There are 2 ways to delete data. The first, standard, when you delete the save slot completely. The second deletes only the saved act data of the selected slot, the slots themselves will be saved, when pressing the [UP] key during the selection of [YES/NO] on the Eggman sign
+	if ((control.pad1.pressed & CONTROL_LEFT) || (control.pad1.pressed & CONTROL_UP))
 	{
-		if ((control.pad1.pressed & CONTROL_LEFT) == 0x00)
-		{
-			DrawObject()
-			return
-		}
-		
 		// Slot address load
 		u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
 		
@@ -49,12 +100,28 @@ function void fn00d8c4()
 		// Check if you have saved data
 		if (loadSavedAct > 0x0000)
 		{
+			if (SHOW_DEBUG_LOGS)
+				debugLog(stringformat("(0x%04x) The saved zone act deleted", loadSavedAct))
+			
 			SaveZoneAct.Data.resetSavedZoneAct(slotAddress)
-			//System.writeDisplayLine("Saved zone act deleted")
+			u8[slotAddress + 0x75] = 0x01
+		}
+		
+		// We will play a beep notifying you that the saved act has been successfully deleted
+		if (control.pad1.pressed & CONTROL_UP)
+		{
+			playSound(0x68)
+			
+			objA0.base_state = 0x08
+			u16[0xffffeee2] = 0x00
+			fn00d854()
 		}
 		
 		// Here we are set a temporary value to the addresses when slot was been deleted
-		u8[slotAddress + 0x08] = 0x01
+		if (control.pad1.pressed & CONTROL_LEFT)
+		{
+			u8[slotAddress + 0x08] = 0x01
+		}
 	}
 	
 	// Call the base function
@@ -74,20 +141,42 @@ function void fn00d790()
 		// Slot address load
 		u32 slotAddress = 0xffffb128 + (0x4a * slot)
 		
-		// Slot data address load
-		u32 slotDataAddress = 0xffffe6ac + (0x0a * slot)
-		
 		// Get saved data from PersistentData
 		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
 		
-		// Check if this slot is non-completed
-		if (u8[slotDataAddress + 0x00] == 0x00)
+		// Slot data address load
+		u32 slotDataAddress = 0xffffe6ac + (0x0a * slot)
+		
+		// Compliance check
+		bool bossBattle = loadSavedAct == 0x1600 || loadSavedAct == 0x1700 || loadSavedAct == 0x0c00
+		bool withoutAct = loadSavedAct == 0x1601 || loadSavedAct == 0x0c00
+		
+		// Check if this slot is non-completed and not a zone without an act
+		if (u8[slotDataAddress + 0x00] == 0x00 && !withoutAct)
 		{
-			u8 getActID = getchar(stringformat("%04x", loadSavedAct), 0x03) - 47
-			u8[slotAddress + 0x70] = getActID
+			if (bossBattle)
+			{
+				// We'll set a different value for saved boss battles to use in renderhook to define the "BOSS" sprite
+				u8[slotAddress + 0x75] = 0x0a
+			}
+			else
+			{
+				// If it is not the boss battle, then assign a value to the address based on the stored value of the act
+				u8 getActID = getchar(stringformat("%04x", loadSavedAct), 0x03) - 47
+				u8[slotAddress + 0x75] = getActID
+			}
+		}
+		else
+		{
+			// If this slot is complete, then we will reset the selected act when you change the slot
+			u32 currentSelectedSlot = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
+			if (currentSelectedSlot != slotAddress)
+			{
+				u8[slotAddress + 0x75] = 0x00
+			}
 		}
 		
-		//debugLog(stringformat("Save slot : Act %d", u8[slotAddress + 0x70]))
+		//debugLog(stringformat("Save slot : Act %d", u8[slotAddress + 0x75]))
 	}
 }
 
@@ -166,7 +255,8 @@ function bool fn00d458()
 				D6 = 0x0c
 			else
 				D6 = 0x0d
-
+			
+			// Zone select
 			D1.u16 = u16[A0 + 0x36]
 			if (control.pad1.pressed & CONTROL_DOWN)
 			{
@@ -184,7 +274,31 @@ function bool fn00d458()
 				if (D1.u16 > D6.u16)
 					D1 = 0x00
 			}
-
+			
+			// If there is a second act for the selected zone, the act is not selected and "CLEAR" portrait is currently inactive then set the value to 1
+			bool withoutSecondAct = D1.u16 == 0x0a || D1.u16 == 0x0b || D1.u16 == 0x0d
+			if (!withoutSecondAct && u8[A0 + 0x75] == 0x00 && (D1.u16 - 0x01 != D6.u16 && D1.u16 != 0x0e))
+			{
+				u8[A0 + 0x75] = 0x01
+			}
+			
+			// Act select
+			// - By pressing the X key, you will be able to switch from act 1 to act 2, and vice versa. Provided that there is a second act for this zone, and "CLEAR" portrait is not active now
+			if (Input.buttonPressed(BUTTON_B) && !withoutSecondAct && !(D1.u16 == 0x0d))
+			{
+				playSound(0x5b)
+				++u8[A0 + 0x75]
+				
+				if (u8[A0 + 0x75] > 0x02)
+					u8[A0 + 0x75] = 0x01
+			}
+			
+			// If there is no second act for this zone, or if "CLEAR" portrait is currently active, reset the choosen act
+			if (withoutSecondAct || (D1.u16 - 0x01 == D6.u16 || D1.u16 == 0x0e))
+			{
+				u8[A0 + 0x75] = 0x00
+			}
+			
 			u16[A0 + 0x36] = D1.u16
 			u8[A0 + 0x1d] = (level.framecounter.low & 0x10) ? 0x1a : 0x00
 		}
@@ -200,7 +314,9 @@ function bool fn00d458()
 		level.giantrings_clear.u16 = u16[A1 + 0x04]
 		
 		if (objA0.value3b == 0x00)
+		{
 			D0.u8 = u8[A1 + 0x03]
+		}
 		else
 		{
 			D0.u16 = u16[A0 + 0x36]
@@ -212,21 +328,27 @@ function bool fn00d458()
 		
 		fn00da4e()
 		
-		// Here we fix the problem of the v1.0.0 release, when the bonus stage was saved as main one, and you could not get out of it.
-		// - We will delete the saved data for the slot that saved the bonus stage as the main level, then the launch will be made from the stored VRAM level, and after, the second act will be saved in normal mode.
+		// Here is the section for correcting stored data. There are times when the wrong value is stored and you are missing an invalid zone or act.
+		// - We will delete the saved data of the current save slot if it saved the bonus stage as the main one, when the competion stage was saved as the main one (This is impossible by the way), when the act is greater than 2, or when hidden Place Emerald Cave is saved as the main level. After removal, the level from the VRAM will be loaded.
 		{
 			// Get saved data from PersistentData
 			u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(A0)
 			
-			// Get data on whether the bonus stage was saved
+			// Get the level data
 			u8 getZoneID = loadSavedAct / 0x100
-			bool savedBonusStage = (getZoneID == 0x0e || getZoneID == 0x0f || getZoneID == 0x10 || getZoneID == 0x11 || getZoneID == 0x12 || getZoneID == 0x13 || getZoneID == 0x14 || getZoneID == 0x15)
+			bool savedBonusStage = (getZoneID == 0x13 || getZoneID == 0x14 || getZoneID == 0x15)
+			bool savedCompetitionStage = (getZoneID == 0x0e || getZoneID == 0x0f || getZoneID == 0x10 || getZoneID == 0x11 || getZoneID == 0x12)
 			
-			// Check if this slot saved a bonus stage
-			if (savedBonusStage)
+			// Get the act data
+			u8 getActID = getchar(stringformat("%04x", loadSavedAct), 0x03) - 47
+			bool savedUnknownAct = (getActID > 0x02)
+			
+			// Check if there are any matches
+			if (savedBonusStage || savedCompetitionStage || savedUnknownAct || loadSavedAct == 0x1701)
 			{
+				if (SHOW_DEBUG_LOGS)
+					debugLog(stringformat("(0x%04x) The saved zone act deleted", loadSavedAct))
 				SaveZoneAct.Data.resetSavedZoneAct(A0)
-				//System.writeDisplayLine("Saved zone act deleted")
 			}
 		}
 		
@@ -245,8 +367,25 @@ function bool fn00d458()
 				// Check if you have saved data, if so, use it to loading
 				if (loadSavedAct > 0x0000)
 				{
-					D0.u16 = loadSavedAct
-					//System.writeDisplayLine("Saved zone act loaded")
+					// We'll keep the level with Lava Reef and Death Egg Boss, because it's fun
+					bool bossBattle = loadSavedAct == 0x1600 || loadSavedAct == 0x1700
+					
+					// Check if the saved zone is the same as the slot portait shows
+					if (SaveZoneAct.getActualZoneID(A0) == (loadSavedAct / 0x100) || bossBattle)
+					{
+						D0.u16 = loadSavedAct
+						if (SHOW_DEBUG_LOGS)
+							debugLog(stringformat("(0x%04x) (0x%02x == 0x%02x) The saved zone act loaded", D0.u16, SaveZoneAct.getActualZoneID(A0), (loadSavedAct / 0x100)))
+					}
+					// If not, then try to "assemble" the zone ID based on the stored zone in the VRAM, and include the saved act from the PersistentData slot
+					else
+					{
+						u8 getActID = getchar(stringformat("%04x", loadSavedAct), 0x03) - 48
+						D0.u16 = (SaveZoneAct.getActualZoneID(A0) * 0x100) + getActID
+						
+						if (SHOW_DEBUG_LOGS)
+							debugLog(stringformat("(0x%04x) (0x%02x != 0x%02x) The assembled zone act loaded", D0.u16, SaveZoneAct.getActualZoneID(A0), (loadSavedAct / 0x100)))
+					}
 				}
 			}
 			// If the slot is complete, then reset the saved data, as it is no longer necessary to use them
@@ -255,8 +394,17 @@ function bool fn00d458()
 				// Check if you have saved data
 				if (loadSavedAct > 0x0000)
 				{
+					if (SHOW_DEBUG_LOGS)
+						debugLog(stringformat("(0x%04x) The saved zone act deleted", loadSavedAct))
 					SaveZoneAct.Data.resetSavedZoneAct(A0)
-					//System.writeDisplayLine("Saved zone act deleted")
+				}
+				
+				// Check if the act selection was used here. If so, "assemble" and load the zone based on this data
+				if (u8[A0 + 0x75] > 0x00)
+				{
+					D0.u16 = (SaveZoneAct.getActualZoneID(A0) * 0x100) + (u8[A0 + 0x75] - 0x01)
+					if (SHOW_DEBUG_LOGS)
+						debugLog(stringformat("(0x%04x) The assembled zone act loaded", D0.u16))
 				}
 			}
 		}

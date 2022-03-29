@@ -1,7 +1,7 @@
 {
 	"Metadata":
 	{
-		"Name": "Save the Second Act of current Zone",
+		"Name": "Save the Second Act of Current Zone",
 		"Author": "FadeInside" ,
 		"Description": "Save the second act of the zone after closing the game. Do not deny yourself the pleasure of closing the game during the second act, making a tea, and enjoying the evening watching a movie.\nNeed \"Data Select Sprites Mod Support\" mod to work.",
 		"URL": "https://github.com/fadeinside/s3air-save-zone-act",

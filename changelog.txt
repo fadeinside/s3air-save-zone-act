@@ -1,5 +1,8 @@
 // Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zone-act
 
+// Update v1.0.2 - The Release 2
+// Note: - 
+
 // Update v1.0.1 - The bug-fix
 // Note: This small fix fixes the problem of saving bonus stages, and the inability to get out of them. If you encounter this, then just update the mod, and re-enter to your game slots to update data. -Fade
 // + Fixed when the bonus stage was saved and you could not exit from it.
