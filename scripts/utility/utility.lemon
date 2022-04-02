@@ -3,6 +3,10 @@ define bool SHOW_DEBUG_LOGS	= false	// If true, the logs will be shown
 //? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
 function void SaveZoneAct.onChangingZones()
 {
+	// Ignore for Rolling Demo
+	if (global.game_mode == 0x08)
+		return
+	
 	// Slot address load
 	u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
 	
