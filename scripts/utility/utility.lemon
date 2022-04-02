@@ -1,4 +1,4 @@
-define bool SHOW_DEBUG_LOGS	= true	// If true, the logs will be shown
+define bool SHOW_DEBUG_LOGS	= false	// If true, the logs will be shown
 
 //? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
 function void SaveZoneAct.onChangingZones()
