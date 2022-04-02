@@ -2,21 +2,21 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
 	if ((global.game_mode & 0x7f) == 0x4c || (global.game_mode & 0x7f) == 0x0c)
 	{
-		// Zone Act X label
+		// Zone act label
 		if (objA0.update_address == 0x00d42c)
 		{
-			u32 currentSelectedSlot = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
 			u32 selectedSlotData = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 			
 			bool nonCompletedSlot = u8[selectedSlotData + 0x00] == 0x00 && u8[A0 + 0x75] != 0x00 && u8[A0 + 0x08] != 0x01
-			bool completedSlot = (u8[selectedSlotData + 0x00] != 0x00 && u8[selectedSlotData + 0x00] != 0x80) && u8[A0 + 0x75] != 0x00 && u8[A0 + 0x08] != 0x01
+			bool completedSlot = u8[selectedSlotData + 0x00] != 0x00 && u8[A0 + 0x75] != 0x00 && u8[A0 + 0x08] != 0x01
+			
 			if (completedSlot || nonCompletedSlot)
 			{
 				// "Sonic 3 Complete Font" by Retro, check https://gamebanana.com/mods/334378
 				// "Sonic 3 Complete Sound Test" by mrgrassman14, check https://gamebanana.com/mods/361615
-				// "Mania Style Data Select" by Agnoristos, check https://gamebanana.com/mods/000000
+				// "Mania Style Data Select" by Agnoristos, check https://gamebanana.com/mods/323556
 				
-				// Define the number of the act 
+				// Define the number of the act
 				u64 key_act
 				if (Mods.isModActive("Mania Style Data Select"))
 					key_act = stringformat("dataSel_saveLabel_Mania_ACT_%d", u8[A0 + 0x75])
@@ -35,45 +35,19 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 					key_boss = "dataSel_saveLabel_ACT_BOSS"
 				
 				// Define whether to use an Boss label or Act label for a slot
-				bool bossBattle = (u8[A0 + 0x75] == 0x0a) ? true : false 
+				bool bossBattle = (u8[A0 + 0x75] == 0x0a) ? true : false
 				u64 key_label = bossBattle ? key_boss : key_act
 				
 				// Check if the sprite exists
 				if (Renderer.hasCustomSprite(key_label))
 				{
 					if (Mods.isModActive("Mania Style Data Select"))
-						Renderer.drawCustomSprite(key_label, px, py - (MenuStyle.dataSelect == 0x00 ? 64 : 56), 0x00, SPRITE_FLAG_PRIO, 0xfffff) 
+						Renderer.drawCustomSprite(key_label, px, py - (MenuStyle.dataSelect == 0x00 ? 64 : 56), 0x00, SPRITE_FLAG_PRIO, 0xffff)
 					else
 						Renderer.drawCustomSprite(key_label, px, py - (MenuStyle.dataSelect == 0x00 ? 48 : 40), 0x00, SPRITE_FLAG_PRIO, renderQueue + 0x01)
 				}
 			}
 		}
-		/*
-		// Zone Act 2 portraits
-		if (objA0.mapping_offset == 0x00ce0e || objA0.mapping_offset == 0x20bd68)
-		{
-			u32 currentSelectedSlot = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
-			u32 selectedSlotData = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
-			
-			if (A0 == currentSelectedSlot && (dataselect.slot_selected > 0x00 && dataselect.slot_selected < 0x09))
-			{
-				u8 zoneID = SaveZoneAct.getActualZoneID(A0)
-				if ((u8[A0 + 0x75] == 0x02) && (u8[A0 + 0x08] != 0x01))
-				{
-					u64 portait
-					if (zoneID == 0x00)
-						portait = "dataSel_portait_AIZ2"
-					else if (zoneID == 0x01)
-						portait = "dataSel_portait_HSZ2"
-					
-					// Check if the sprite exists
-					if (Renderer.hasCustomSprite(portait))
-					{
-						Renderer.drawCustomSprite(portait, px - 40, py - (MenuStyle.dataSelect == 0x00 ? 128 : 120), 0x00, SPRITE_FLAG_PRIO, renderQueue + 0x01)
-					}
-				} 
-			}
-		}*/
 	}
 	
 	// Return the base function

@@ -1,4 +1,4 @@
-define bool SHOW_DEBUG_LOGS	= false	// If true, the logs will be shown
+define bool SHOW_DEBUG_LOGS	= true	// If true, the logs will be shown
 
 //? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
 function void SaveZoneAct.onChangingZones()
@@ -57,7 +57,7 @@ function u8 SaveZoneAct.getActualZoneID(u32 address)
 	u8 zoneID = u16[address + 0x36]
 	u8 actualZoneID = zoneID
 	
-	// Check if Original zone order mod is active
+	// "Original zone order" by legobouwer9, check https://gamebanana.com/mods/54063
 	if !(Mods.isModActive("Original zone order"))
 	{
 		if (zoneID >= 0x04 && zoneID <= 0x06)
@@ -67,6 +67,7 @@ function u8 SaveZoneAct.getActualZoneID(u32 address)
 	}
 	
 	// Zone Identification fix
+	// - Since HPZ does not use its 0x1601 ID in the portraits list, but uses the SSZ ID, this led to incorrect receipt of the zone ID, as a result of which the zone load was buggy. Here we assign a real ID to HPZ, and then demolish all the displaced zones to their places
 	if (zoneID == 0x0a)
 		actualZoneID = 0x16
 	else if (zoneID == 0x0b)
@@ -149,7 +150,7 @@ function void fn00d790()
 		
 		// Compliance check
 		bool bossBattle = loadSavedAct == 0x1600 || loadSavedAct == 0x1700 || loadSavedAct == 0x0c00
-		bool withoutAct = loadSavedAct == 0x1601 || loadSavedAct == 0x0c00
+		bool withoutAct = loadSavedAct == 0x1601 // || loadSavedAct == 0x0c00
 		
 		// Check if this slot is non-completed and not a zone without an act
 		if (u8[slotDataAddress + 0x00] == 0x00 && !withoutAct)
@@ -283,7 +284,7 @@ function bool fn00d458()
 			}
 			
 			// Act select
-			// - By pressing the X key, you will be able to switch from act 1 to act 2, and vice versa. Provided that there is a second act for this zone, and "CLEAR" portrait is not active now
+			// - By pressing the [X] key, you will be able to switch from act 1 to act 2, and vice versa. Provided that there is a second act for this zone, and "CLEAR" portrait is not active now
 			if (Input.buttonPressed(BUTTON_B) && !withoutSecondAct && !(D1.u16 == 0x0d))
 			{
 				playSound(0x5b)

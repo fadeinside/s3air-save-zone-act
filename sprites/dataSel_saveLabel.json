@@ -1,10 +1,4 @@
 {
-	// Experiments
-	"dataSel_portait_AIZ2": { "File": "saveSel_portait_AIZ2.png", "Rect": "0,0,80,56", "Center": "0,0" },
-	"dataSel_portait_HSZ2": { "File": "saveSel_portait_HSZ2.png", "Rect": "0,0,80,56", "Center": "0,0" },
-	
-	//-----------
-	
 	// "Act 0 ~ 3" label
 	"dataSel_saveLabel_ACT_0": { "File": "dataSel_saveLabel_ACT.png", "Rect": "1,1,48,8", "Center": "24,8" },
 	"dataSel_saveLabel_ACT_1": { "File": "dataSel_saveLabel_ACT.png", "Rect": "1,10,48,8", "Center": "24,8" },
@@ -12,17 +6,17 @@
 	"dataSel_saveLabel_ACT_3": { "File": "dataSel_saveLabel_ACT.png", "Rect": "1,28,48,8", "Center": "24,8" },
 	"dataSel_saveLabel_ACT_BOSS": { "File": "dataSel_saveLabel_ACT.png", "Rect": "1,37,48,8", "Center": "24,8" },
 	
-	// "Act 0 ~ 3" label (Needed Sonic 3 Complete Font mod)
+	// "Act 0 ~ 3" label (Needed Sonic 3 Complete Font / Sonic 3 Complete Sound Test mod)
 	"dataSel_saveLabel_Complete_ACT_0": { "File": "dataSel_saveLabel_ACT.png", "Rect": "50,1,48,8", "Center": "24,8" },
 	"dataSel_saveLabel_Complete_ACT_1": { "File": "dataSel_saveLabel_ACT.png", "Rect": "50,10,48,8", "Center": "24,8" },
 	"dataSel_saveLabel_Complete_ACT_2": { "File": "dataSel_saveLabel_ACT.png", "Rect": "50,19,48,8", "Center": "24,8" },
 	"dataSel_saveLabel_Complete_ACT_3": { "File": "dataSel_saveLabel_ACT.png", "Rect": "50,28,48,8", "Center": "24,8" },
-	"dataSel_saveLabel_Complete_ACT_BOSS": { "File": "dataSel_saveLabel_ACT.png", "Rect": "50,28,48,8", "Center": "24,8" },
+	"dataSel_saveLabel_Complete_ACT_BOSS": { "File": "dataSel_saveLabel_ACT.png", "Rect": "50,37,48,8", "Center": "24,8" },
 	
 	// "Act 0 ~ 3" label (Needed Mania Style Data Select mod)
 	"dataSel_saveLabel_Mania_ACT_0": { "File": "dataSel_saveLabel_Mania_ACT.png", "Rect": "1,1,50,15", "Center": "40,22" },
 	"dataSel_saveLabel_Mania_ACT_1": { "File": "dataSel_saveLabel_Mania_ACT.png", "Rect": "1,17,50,15", "Center": "40,22" },
 	"dataSel_saveLabel_Mania_ACT_2": { "File": "dataSel_saveLabel_Mania_ACT.png", "Rect": "1,33,50,15", "Center": "40,22" },
 	"dataSel_saveLabel_Mania_ACT_3": { "File": "dataSel_saveLabel_Mania_ACT.png", "Rect": "1,49,50,15", "Center": "40,22" },
-	"dataSel_saveLabel_Mania_ACT_BOSS": { "File": "dataSel_saveLabel_Mania_ACT.png", "Rect": "52,1,50,15", "Center": "40,22" }  
+	"dataSel_saveLabel_Mania_ACT_BOSS": { "File": "dataSel_saveLabel_Mania_ACT.png", "Rect": "52,1,50,15", "Center": "40,22" } 
 }
