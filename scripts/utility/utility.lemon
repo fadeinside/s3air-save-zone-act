@@ -11,14 +11,14 @@ function void SaveZoneAct.onChangingZones()
 	u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
 	
 	// Slot data address load
-	u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
+	u32 dataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 	
 	// Load saved act
 	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
 	
 	// Save current act
 	// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act not match with the saved one
-	if (dataselect.slot_selected > 0x00 && (u8[slotDataAddress + 0x00] == 0x00) && (loadSavedAct != global.zone_act))
+	if (dataselect.slot_selected > 0x00 && (u8[dataAddress + 0x00] == 0x00) && (loadSavedAct != global.zone_act))
 	{
 		SaveZoneAct.Data.saveCurrentZoneAct(slotAddress, global.zone_act)
 		if (SHOW_DEBUG_LOGS)
@@ -109,7 +109,7 @@ function void fn00d8c4()
 				debugLog(stringformat("(0x%04x) The saved zone act deleted", loadSavedAct))
 			
 			SaveZoneAct.Data.resetSavedZoneAct(slotAddress)
-			u8[slotAddress + 0x75] = 0x01
+			u8[slotAddress + 0x9a] = 0x01
 		}
 		
 		// We will play a beep notifying you that the saved act has been successfully deleted
@@ -137,9 +137,6 @@ function void fn00d8c4()
 //# address-hook(0x00d790) end(0x00d790)
 function void fn00d790()
 {
-	// Call base function
-	base.fn00d790()
-	
 	// Loop simulates slots
 	for (u8 slot = 0x00; slot < 0x08; ++slot)
 	{
@@ -150,39 +147,40 @@ function void fn00d790()
 		u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
 		
 		// Slot data address load
-		u32 slotDataAddress = 0xffffe6ac + (0x0a * slot)
+		u32 dataAddress = 0xffffe6ac + (0x0a * slot)
 		
 		// Compliance check
 		bool bossBattle = loadSavedAct == 0x1600 || loadSavedAct == 0x1700 || loadSavedAct == 0x0c00
 		bool withoutAct = loadSavedAct == 0x1601 // || loadSavedAct == 0x0c00
 		
 		// Check if this slot is non-completed and not a zone without an act
-		if (u8[slotDataAddress + 0x00] == 0x00 && !withoutAct)
+		if (u8[dataAddress] == 0x00 && !withoutAct)
 		{
 			if (bossBattle)
 			{
 				// We'll set a different value for saved boss battles to use in renderhook to define the "BOSS" sprite
-				u8[slotAddress + 0x75] = 0x0a
+				u8[slotAddress + 0x9a] = 0x0a
 			}
 			else
 			{
 				// If it is not the boss battle, then assign a value to the address based on the stored value of the act
 				u8 getActID = getchar(stringformat("%04x", loadSavedAct), 0x03) - 47
-				u8[slotAddress + 0x75] = getActID
+				u8[slotAddress + 0x9a] = getActID
 			}
 		}
 		else
 		{
 			// If this slot is complete, then we will reset the selected act when you change the slot
-			u32 currentSelectedSlot = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
-			if (currentSelectedSlot != slotAddress)
+			u32 currentSlotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
+			if (currentSlotAddress != slotAddress)
 			{
-				u8[slotAddress + 0x75] = 0x00
+				u8[slotAddress + 0x9a] = 0x00
 			}
 		}
-		
-		//debugLog(stringformat("Save slot : Act %d", u8[slotAddress + 0x75]))
 	}
+	
+	// Call base function
+	base.fn00d790()
 }
 
 //@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
@@ -282,9 +280,9 @@ function bool fn00d458()
 			
 			// If there is a second act for the selected zone, the act is not selected and "CLEAR" portrait is currently inactive then set the value to 1
 			bool withoutSecondAct = D1.u16 == 0x0a || D1.u16 == 0x0b || D1.u16 == 0x0d
-			if (!withoutSecondAct && u8[A0 + 0x75] == 0x00 && (D1.u16 - 0x01 != D6.u16 && D1.u16 != 0x0e))
+			if (!withoutSecondAct && u8[A0 + 0x9a] == 0x00 && (D1.u16 - 0x01 != D6.u16 && D1.u16 != 0x0e))
 			{
-				u8[A0 + 0x75] = 0x01
+				u8[A0 + 0x9a] = 0x01
 			}
 			
 			// Act select
@@ -292,16 +290,16 @@ function bool fn00d458()
 			if (Input.buttonPressed(BUTTON_B) && !withoutSecondAct && !(D1.u16 == 0x0d))
 			{
 				playSound(0x5b)
-				++u8[A0 + 0x75]
+				++u8[A0 + 0x9a]
 				
-				if (u8[A0 + 0x75] > 0x02)
-					u8[A0 + 0x75] = 0x01
+				if (u8[A0 + 0x9a] > 0x02)
+					u8[A0 + 0x9a] = 0x01
 			}
 			
 			// If there is no second act for this zone, or if "CLEAR" portrait is currently active, reset the choosen act
 			if (withoutSecondAct || (D1.u16 - 0x01 == D6.u16 || D1.u16 == 0x0e))
 			{
-				u8[A0 + 0x75] = 0x00
+				u8[A0 + 0x9a] = 0x00
 			}
 			
 			u16[A0 + 0x36] = D1.u16
@@ -364,10 +362,10 @@ function bool fn00d458()
 			u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(A0)
 			
 			// Slot data address load
-			u32 slotDataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
+			u32 dataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 			
 			// Check if this slot is non-completed
-			if (u8[slotDataAddress + 0x00] == 0x00)
+			if (u8[dataAddress + 0x00] == 0x00)
 			{
 				// Check if you have saved data, if so, use it to loading
 				if (loadSavedAct > 0x0000)
@@ -405,9 +403,9 @@ function bool fn00d458()
 				}
 				
 				// Check if the act selection was used here. If so, "assemble" and load the zone based on this data
-				if (u8[A0 + 0x75] > 0x00)
+				if (u8[A0 + 0x9a] > 0x00)
 				{
-					D0.u16 = (SaveZoneAct.getActualZoneID(A0) * 0x100) + (u8[A0 + 0x75] - 0x01)
+					D0.u16 = (SaveZoneAct.getActualZoneID(A0) * 0x100) + (u8[A0 + 0x9a] - 0x01)
 					if (SHOW_DEBUG_LOGS)
 						debugLog(stringformat("(0x%04x) The assembled zone act loaded", D0.u16))
 				}

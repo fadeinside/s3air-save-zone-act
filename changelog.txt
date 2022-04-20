@@ -1,6 +1,10 @@
 // Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zone-act
 
-// Update v1.0.2 - The Release 2
+// Update v1.0.3 - Untitled
+// Note: -
+// + Adjustments to support latest changes of "Extra Slot Mighty" by iCloudius.
+
+// Release v1.0.2 - The Release 2
 // Note: In this release we fix all possible bugs, add few new features, as well as widespread improvements for stability. Hope you enjoy it! -Fade
 // + The script for loading and saving the act has been completely rewritten.
 // + Now the second act will be saved only after the title card of the first act.

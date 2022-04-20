@@ -7,8 +7,8 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		{
 			u32 selectedSlotData = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 			
-			bool nonCompletedSlot = u8[selectedSlotData + 0x00] == 0x00 && u8[A0 + 0x75] != 0x00 && u8[A0 + 0x08] != 0x01
-			bool completedSlot = u8[selectedSlotData + 0x00] != 0x00 && u8[A0 + 0x75] != 0x00 && u8[A0 + 0x08] != 0x01
+			bool nonCompletedSlot = u8[selectedSlotData + 0x00] == 0x00 && u8[A0 + 0x9a] != 0x00 && u8[A0 + 0x08] != 0x01
+			bool completedSlot = u8[selectedSlotData + 0x00] != 0x00 && u8[A0 + 0x9a] != 0x00 && u8[A0 + 0x08] != 0x01
 			
 			if (completedSlot || nonCompletedSlot)
 			{
@@ -19,11 +19,11 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 				// Define the number of the act
 				u64 key_act
 				if (Mods.isModActive("Mania Style Data Select"))
-					key_act = stringformat("dataSel_saveLabel_Mania_ACT_%d", u8[A0 + 0x75])
+					key_act = stringformat("dataSel_saveLabel_Mania_ACT_%d", u8[A0 + 0x9a])
 				else if (Mods.isModActive("Sonic 3 Complete Font") || Mods.isModActive("Sonic 3 Complete Sound Test"))
-					key_act = stringformat("dataSel_saveLabel_Complete_ACT_%d", u8[A0 + 0x75])
+					key_act = stringformat("dataSel_saveLabel_Complete_ACT_%d", u8[A0 + 0x9a])
 				else
-					key_act = stringformat("dataSel_saveLabel_ACT_%d", u8[A0 + 0x75])
+					key_act = stringformat("dataSel_saveLabel_ACT_%d", u8[A0 + 0x9a])
 				
 				// Define the boss battle sprite
 				u64 key_boss
@@ -35,7 +35,7 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 					key_boss = "dataSel_saveLabel_ACT_BOSS"
 				
 				// Define whether to use an Boss label or Act label for a slot
-				bool bossBattle = (u8[A0 + 0x75] == 0x0a) ? true : false
+				bool bossBattle = (u8[A0 + 0x9a] == 0x0a) ? true : false
 				u64 key_label = bossBattle ? key_boss : key_act
 				
 				// Check if the sprite exists
