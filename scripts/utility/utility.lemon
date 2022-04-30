@@ -21,8 +21,25 @@ function void SaveZoneAct.onChangingZones()
 	if (dataselect.slot_selected > 0x00 && (u8[dataAddress + 0x00] == 0x00) && (loadSavedAct != global.zone_act))
 	{
 		SaveZoneAct.Data.saveCurrentZoneAct(slotAddress, global.zone_act)
+		
 		if (SHOW_DEBUG_LOGS)
 			debugLog(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, slotAddress))
+		
+		// Save score, lives and continues
+		lives_counter = min(lives_counter, 99)
+		continues_counter = min(continues_counter, 99)
+		
+		A1 = global.active_saveslot
+		u8[A1 + 0x08] = lives_counter
+		u8[A1 + 0x09] = continues_counter
+		
+	#if STANDALONE
+		u32 slotIndex = (A1 - 0xffffe6ac) / 0x0a
+		u32 address = 0x801100 + slotIndex * 0x20
+		u32[address] = player.score
+	#endif
+
+		SaveGameSlot()
 	}
 }
 
@@ -44,7 +61,7 @@ function void Standalone.onLevelFinished()
 	base.Standalone.onLevelFinished()
 }
 
-//@ Function taken from sonic3air_dev/scripts/level/level_display.lemon
+//@ Function taken from sonic3air_dev/scripts/general/saveslots.lemon
 //# address-hook(0x00c434) end(0x00c4d0)
 function void SaveGameOnLevelFinished()
 {
