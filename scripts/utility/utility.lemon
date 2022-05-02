@@ -43,6 +43,20 @@ function void SaveZoneAct.onChangingZones()
 	}
 }
 
+//@ Function taken from sonic3air_dev/scripts/level/level_display.lemon
+//# address-hook(0x04e408) end(0x04e456)
+function void UpdateLevelDisplay()
+{
+	// So we fix the saving the second act of SOZ
+	if (global.zone_act == 0x0801)
+	{
+		SaveZoneAct.onChangingZones()
+	}
+	
+	// Call the base function
+	base.UpdateLevelDisplay()
+}
+
 //@ Function taken from sonic3air_dev/scripts/standalone/gamecallbacks.lemon
 function void Standalone.onLevelStart()
 {

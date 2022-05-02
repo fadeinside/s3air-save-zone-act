@@ -1,11 +1,12 @@
 // Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zone-act
 
-// Update v1.0.3 - Save my life
-// Note: -
+// Update v2.01 - Save my life
+// Note: We have made several improvements to the mod, for a smoother gameplay. Thus, at the end of the first act, your score, lifes and continues will be saved, and also the saving of the second act in the Sandopolis Zone has been fixed. -Fade
+// + Added saving the score, lifes and continues at the end of the first act.
+// + Fixed saving the second act in the Sandopolis Zone.
 // + Adjustments to support latest changes of "Extra Slot Mighty" by iCloudius.
-// + Added saving Score, Lifes and Continues.
 
-// Release v1.0.2 - The Release 2
+// Release v1.0.2 (v2.0) - The Release 2
 // Note: In this release we fix all possible bugs, add few new features, as well as widespread improvements for stability. Hope you enjoy it! -Fade
 // + The script for loading and saving the act has been completely rewritten.
 // + Now the second act will be saved only after the title card of the first act.
@@ -21,6 +22,6 @@
 // + Fixed the disappear of main character art, if it was modified.
 // + Improved functionality of the bug-correction script from previous versions. If it doesn't work and your save starts the wrong zone, then use the removal of the second act.
 
-// Update v1.0.1 - The bug-fix
+// Update v1.0.1 (v1.01) - The bug-fix
 // Note: This small fix fixes the problem of saving bonus stages, and the inability to get out of them. If you encounter this, then just update the mod, and re-enter to your game slots to update data. -Fade
 // + Fixed when the bonus stage was saved and you could not exit from it.
