@@ -1,3 +1,15 @@
+//@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
+function void DataSelect.sharedNewGameStartup()
+{
+	// Show loading icon
+	// Only for Data Select menu
+	if (global.game_mode == 0x4c && dataselect.slot_selected > 0x00)
+		SaveZoneAct.SaveIcon.show()
+	
+	// Call the base function
+	base.DataSelect.sharedNewGameStartup()
+}
+
 //@ Function taken from sonic3air_dev/scripts/standalone/standalone.lemon
 function void waitForNextFrame()
 {
@@ -161,11 +173,6 @@ function void fn00d8c4()
 			SaveZoneAct.Data.resetSavedZoneAct(slotAddress)
 			u8[slotAddress + 0x9a] = 0x01
 		}
-		else
-		{
-			// Show save icon
-			SaveZoneAct.SaveIcon.show()
-		}
 		
 		// We will play a beep notifying you that the saved act has been successfully deleted
 		if (control.pad1.pressed & CONTROL_UP)
@@ -176,6 +183,9 @@ function void fn00d8c4()
 			u16[0xffffeee2] = 0x00
 			fn00d854()
 		}
+		
+		// Show save icon
+		SaveZoneAct.SaveIcon.show()
 		
 		// Here we are set a temporary value to the addresses when slot was been deleted
 		if (control.pad1.pressed & CONTROL_LEFT)
