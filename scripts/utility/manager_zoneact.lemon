@@ -11,6 +11,8 @@ function u16 SaveZoneAct.Data.loadSavedZoneAct(u32 address)
 //? Saves the current zone act to PersistentData based on the specified address.
 function void SaveZoneAct.Data.saveCurrentZoneAct(u32 address, u16 value)
 {
+	SaveZoneAct.SaveIcon.show()
+	
 	// Assign a value to an address
 	u16[address + 0x40] = value
 	
@@ -21,6 +23,8 @@ function void SaveZoneAct.Data.saveCurrentZoneAct(u32 address, u16 value)
 //? Reset the saved zone act for the current slot based on the specified address.
 function void SaveZoneAct.Data.resetSavedZoneAct(u32 address)
 {
+	SaveZoneAct.SaveIcon.show()
+	
 	// Assign a value to an address
 	u16[address + 0x40] = 0x0000
 	

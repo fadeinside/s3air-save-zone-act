@@ -1,10 +1,29 @@
-define bool SHOW_DEBUG_LOGS	= false	// If true, the logs will be shown
+//@ Function taken from sonic3air_dev/scripts/standalone/standalone.lemon
+function void waitForNextFrame()
+{
+	if !(global.game_mode == 0x8c)
+		SaveZoneAct.SaveIcon.update()
+	
+	// Call the base function
+	base.waitForNextFrame()
+}
+
+//@ Function taken from sonic3air_dev/scripts/general/saveslots.lemon
+//# address-hook(0x00c154) end(0x00c260)
+function void InitSaveSlots()
+{
+	// Call the base function
+	base.InitSaveSlots()
+	
+	// Show save icon
+	SaveZoneAct.SaveIcon.show()
+}
 
 //? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
 function void SaveZoneAct.onChangingZones()
 {
-	// Ignore for Rolling Demo
-	if (global.game_mode == 0x08)
+	// Ignore for rolling demo and competition mode
+	if (global.game_mode == 0x08 || competition_mode.active)
 		return
 	
 	// Slot address load
@@ -141,6 +160,11 @@ function void fn00d8c4()
 			
 			SaveZoneAct.Data.resetSavedZoneAct(slotAddress)
 			u8[slotAddress + 0x9a] = 0x01
+		}
+		else
+		{
+			// Show save icon
+			SaveZoneAct.SaveIcon.show()
 		}
 		
 		// We will play a beep notifying you that the saved act has been successfully deleted

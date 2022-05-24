@@ -1,0 +1,60 @@
+//? The main function of updating the save icon.
+function void SaveZoneAct.SaveIcon.update()
+{
+	if !(screen.saveicon.show)
+	{
+		if (screen.saveicon.timer != 0x00)
+			screen.saveicon.timer = 0x00
+		
+		// Reduce alpha if it is not equal to 0
+		if (screen.saveicon.alpha > 0x00)
+		{
+			screen.saveicon.alpha -= 15
+			
+			// Forcibly assign 0 to alpha
+			if (screen.saveicon.alpha < 15)
+				screen.saveicon.alpha = 0x00
+		}
+	}
+	else
+	{
+		++screen.saveicon.timer
+		
+		// Add value to alpha
+		if (screen.saveicon.alpha < 255)
+			screen.saveicon.alpha += 15
+		
+		if (screen.saveicon.timer >= 76)
+			screen.saveicon.show = false
+	}
+	
+	if (screen.saveicon.alpha > 0x00)
+		SaveZoneAct.SaveIcon.overlay()
+	
+	//debugLog(stringformat("%d, %d, %d", screen.saveicon.show, screen.saveicon.timer, screen.saveicon.alpha))
+}
+
+//? Save icon rendering function.
+function void SaveZoneAct.SaveIcon.overlay()
+{
+	// Updating the ring frame rate, but not at the levels, since already
+	if (global.game_mode != 0x0c)
+		UpdateGlobalRingAnimation()
+	
+	// Ring key and framerate
+	u16 animFrame = ((static_rings.animframe * 0x08 + 0x07 - static_rings.animtimer) / 0x04) % 0x08
+	string key = stringformat("saveicon_ring_0%d", animFrame)
+	
+	// Icon ring
+	Renderer.drawCustomSprite(key, getScreenWidth() - 28, getScreenHeight() - 28, 0x00, SPRITE_FLAG_PRIO, 0xffff, 0x00, screen.saveicon.alpha)
+	
+	// Icon background (Glow)
+	Renderer.drawCustomSprite("saveicon_glow", getScreenWidth() - 28, getScreenHeight() - 28, 0x00, SPRITE_FLAG_PRIO, 0xffff, 0x00, screen.saveicon.alpha)
+}
+
+//? Value setup function to show the save icon.
+function void SaveZoneAct.SaveIcon.show()
+{
+	screen.saveicon.show = true
+	screen.saveicon.timer = 0x00
+} 

@@ -1,0 +1,7 @@
+// Debug
+define bool SHOW_DEBUG_LOGS	= false	// If true, the logs will be shown
+
+// Auto-save icon
+global bool screen.saveicon.show	// Set to true when the save icon is shown
+global s32 screen.saveicon.alpha	// Sets the transparency value for the save icon
+global s32 screen.saveicon.timer	// Wait timer before the icon disappears again

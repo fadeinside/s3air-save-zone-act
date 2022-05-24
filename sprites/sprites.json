@@ -1,0 +1,18 @@
+{
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+	// sprites/sprites_menu_saveicon.png			//
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+	
+	// Save icon background
+	"saveicon_glow": { "File": "sprites/sprites_menu_saveicon.png", "Rect": "69,1,28,28",  "Center": "14,14" },
+	
+	// Save icon ring
+	"saveicon_ring_00": { "File": "sprites/sprites_menu_saveicon.png", "Rect":  "1,1,16,16", "Center": "8,8" },
+	"saveicon_ring_01": { "File": "sprites/sprites_menu_saveicon.png", "Rect": "18,1,16,16", "Center": "8,8" },
+	"saveicon_ring_02": { "File": "sprites/sprites_menu_saveicon.png", "Rect": "35,1,16,16", "Center": "8,8" },
+	"saveicon_ring_03": { "File": "sprites/sprites_menu_saveicon.png", "Rect": "52,1,16,16", "Center": "8,8" },
+	"saveicon_ring_04": { "File": "sprites/sprites_menu_saveicon.png", "Rect": "1,18,16,16", "Center": "8,8" },
+	"saveicon_ring_05": { "File": "sprites/sprites_menu_saveicon.png", "Rect": "18,18,16,16", "Center": "8,8" },
+	"saveicon_ring_06": { "File": "sprites/sprites_menu_saveicon.png", "Rect": "35,18,16,16", "Center": "8,8" },
+	"saveicon_ring_07": { "File": "sprites/sprites_menu_saveicon.png", "Rect":"52,18,16,16", "Center": "8,8" }
+}

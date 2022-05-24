@@ -4,8 +4,9 @@ Save the second act of the zone after closing the game. Do not deny yourself the
 
 <font color="#6ee16c">List of features:</font><br>
 1. Automatically saves the act of the current zone after the zone card of the first act.<br>
-2. <font color="#6ee16c">[New!]</font> Saves your score, lifes and continues at the end of the first act.
-2. Choosing an act for completed slots inside Data Select menu.<br>
+2. Choosing an act for Completed Slots.<br>
+3. Deletes the saved data for the deleted save slot.<br>
+4. Deletes the saved data for the completed save slot.<br>
 5. Does not save any data for the "No Save" slot and the game via Act/Level select.<br><br>
 
 <font color="#6ee16c">Compatibility Notes:</font><br>

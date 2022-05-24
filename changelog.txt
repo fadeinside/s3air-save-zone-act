@@ -1,7 +1,7 @@
 // Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zone-act
 
 // Update v2.01 - Save my life
-// Note: We have made several improvements to the mod, for a smoother gameplay. Thus, at the end of the first act, your score, lifes and continues will be saved, and also the saving of the second act in the Sandopolis Zone has been fixed. -Fade
+// Note: We have made several improvements to the mod, for a smoother gameplay. Thus, at the end of the first act, your score, life and continues will be saved, and also the saving of the second act in the Sandopolis Zone has been fixed.
 // + Added saving the score, lifes and continues at the end of the first act.
 // + Fixed saving the second act in the Sandopolis Zone.
 // + Adjustments to support latest changes of "Extra Slot Mighty" by iCloudius.
