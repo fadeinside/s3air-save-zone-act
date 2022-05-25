@@ -5,7 +5,10 @@ Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zo
 ## Update v2.02 - Origins vibes
 
 * Added an icon at the bottom of the screen notifying about zone saving/loading.
+* Now "Data Select Character Sprite Mod Support" by Veenee is no longer required as a necessary dependency.
+* The logo has been changed.
 * Fixed when any Competition stage could be saved to the first save slot.
+* Fixed the disappearance of "Act X" label in Data Select when starting the game.
 
 ## Update v2.01 - Save my life
 

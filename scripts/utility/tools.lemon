@@ -1,0 +1,84 @@
+//? Check the activity of mods and assign a value to globals.
+function void SaveZoneAct.modsCheck()
+{
+	// "Sonic 3 Complete Font" by Retro, check https://gamebanana.com/mods/334378
+	MOD_COMPLETE_FONT_ACTIVE	= Mods.isModActive("Sonic 3 Complete Font")
+	// "Sonic 3 Complete Sound Test" by mrgrassman14, check https://gamebanana.com/mods/361615
+	MOD_COMPLETE_STEST_ACTIVE	= Mods.isModActive("Sonic 3 Complete Sound Test")
+	// "Mania Style Data Select" by Agnoristos, check https://gamebanana.com/mods/323556
+	MOD_MANIA_DATA_ACTIVE	= Mods.isModActive("Mania Style Data Select")
+}
+
+//? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
+function void SaveZoneAct.onChangingZones()
+{
+	// Ignore for rolling demo and competition mode
+	if (global.game_mode == 0x08 || competition_mode.active)
+		return
+	
+	// Slot address load
+	u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
+	
+	// Slot data address load
+	u32 dataAddress = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
+	
+	// Load saved act
+	u16 loadSavedAct = SaveZoneAct.Data.loadSavedZoneAct(slotAddress)
+	
+	// Save current act
+	// - If it is not a "No Save" slot, if this slot is non-completed, and the current zone act not match with the saved one
+	if (dataselect.slot_selected > 0x00 && (u8[dataAddress + 0x00] == 0x00) && (loadSavedAct != global.zone_act))
+	{
+		SaveZoneAct.Data.saveCurrentZoneAct(slotAddress, global.zone_act)
+		
+		if (SHOW_DEBUG_LOGS)
+			debugLog(stringformat("Saved 0x%04x to 0x%06x", global.zone_act, slotAddress))
+		
+		// Save score, lives and continues
+		lives_counter = min(lives_counter, 99)
+		continues_counter = min(continues_counter, 99)
+		
+		A1 = global.active_saveslot
+		u8[A1 + 0x08] = lives_counter
+		u8[A1 + 0x09] = continues_counter
+		
+	#if STANDALONE
+		u32 slotIndex = (A1 - 0xffffe6ac) / 0x0a
+		u32 address = 0x801100 + slotIndex * 0x20
+		u32[address] = player.score
+	#endif
+
+		SaveGameSlot()
+	}
+}
+
+//? Returns the actual ID of the zone, matching the portait art zone in Data Select.
+function u8 SaveZoneAct.getActualZoneID(u32 address)
+{
+	// Setup variables
+	u8 zoneID = u16[address + 0x36]
+	u8 actualZoneID = zoneID
+	
+	// "Original zone order" by legobouwer9, check https://gamebanana.com/mods/54063
+	if !(Mods.isModActive("Original zone order"))
+	{
+		if (zoneID >= 0x04 && zoneID <= 0x06)
+			++actualZoneID
+		else if (zoneID == 0x07)
+			actualZoneID = 0x04
+	}
+	
+	// Zone Identification fix
+	// - Since HPZ does not use its 0x1601 ID in the portraits list, but uses the SSZ ID, this led to incorrect receipt of the zone ID, as a result of which the zone load was buggy. Here we assign a real ID to HPZ, and then demolish all the displaced zones to their places
+	if (zoneID == 0x0a)
+		actualZoneID = 0x16
+	else if (zoneID == 0x0b)
+		actualZoneID = 0x0a
+	else if (zoneID == 0x0c)
+		actualZoneID = 0x0b
+	else if (zoneID == 0x0d)
+		actualZoneID = 0x0c
+	
+	// Return value
+	return actualZoneID
+}

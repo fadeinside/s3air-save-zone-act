@@ -1,5 +1,30 @@
 {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+	// sprites/sprites_menu_act.png				   //
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+	
+	// "Act 0 ~ 3" label
+	"savelabel_act_0": { "File": "sprites/sprites_menu_act.png", "Rect": "53,18,48,8", "Center": "24,8" },
+	"savelabel_act_1": { "File": "sprites/sprites_menu_act.png", "Rect": "53,27,48,8", "Center": "24,8" },
+	"savelabel_act_2": { "File": "sprites/sprites_menu_act.png", "Rect": "53,36,48,8", "Center": "24,8" },
+	"savelabel_act_3": { "File": "sprites/sprites_menu_act.png", "Rect": "53,45,48,8", "Center": "24,8" },
+	"savelabel_act_boss": { "File": "sprites/sprites_menu_act.png", "Rect": "54,54,48,8", "Center": "24,8" },
+	
+	// "Act 0 ~ 3" label (Needed Sonic 3 Complete Font / Sonic 3 Complete Sound Test mod)
+	"savelabel_complete_act_0": { "File": "sprites/sprites_menu_act.png", "Rect": "102,18,48,8", "Center": "24,8" },
+	"savelabel_complete_act_1": { "File": "sprites/sprites_menu_act.png", "Rect": "102,27,48,8", "Center": "24,8" },
+	"savelabel_complete_act_2": { "File": "sprites/sprites_menu_act.png", "Rect": "102,36,48,8", "Center": "24,8" },
+	"savelabel_complete_act_3": { "File": "sprites/sprites_menu_act.png", "Rect": "102,45,48,8", "Center": "24,8" },
+	"savelabel_complete_act_boss": { "File": "sprites/sprites_menu_act.png", "Rect": "102,54,48,8", "Center": "24,8" },
+	
+	// "Act 0 ~ 3" label (Needed Mania Style Data Select mod)
+	"savelabel_mania_act_0": { "File": "sprites/sprites_menu_act.png", "Rect": "1,1,50,15", "Center": "40,22" },
+	"savelabel_mania_act_1": { "File": "sprites/sprites_menu_act.png", "Rect": "1,17,50,15", "Center": "40,22" },
+	"savelabel_mania_act_2": { "File": "sprites/sprites_menu_act.png", "Rect": "1,33,50,15", "Center": "40,22" },
+	"savelabel_mania_act_3": { "File": "sprites/sprites_menu_act.png", "Rect": "1,49,50,15", "Center": "40,22" },
+	"savelabel_mania_act_boss": { "File": "sprites/sprites_menu_act.png", "Rect": "52,1,50,15", "Center": "40,22" },
+	
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	// sprites/sprites_menu_saveicon.png			//
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 	

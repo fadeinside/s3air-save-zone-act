@@ -1,8 +1,6 @@
 Save the second act of the zone after closing the game. Do not deny yourself the pleasure of closing the game during the second act, making a tea, and enjoying the evening watching a movie.<br><br>
 
-<font color="#fe4e4e">Need <a href="https://gamebanana.com/mods/54174">Data Select Sprites Mod Support</a> mod to work.</font><br><br>
-
-<font color="#6ee16c"><h2>List of features:</h2></font>
+<font color="#6ee16c"><h2>List of features:</h2></font><br>
 <ul><li>Automatically saves the act of the current zone after the zone card of the first act.</li>
 <li>Saves your score, lifes and continues at the end of the first act.</li>
 <li>Choosing an act for completed slots inside Data Select menu.</li>
