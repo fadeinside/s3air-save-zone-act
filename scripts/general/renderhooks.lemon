@@ -9,6 +9,17 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		if (objA0.update_address == 0x00d42c)
 		{
 			s16 posY
+			u8 getMenuStyle
+			
+		#if GAMEAPP >= 0x22051500
+			getMenuStyle = System.getGlobalVariableValueByName("MenuStyle.dataSelect")
+		#endif
+			
+			if (MOD_MANIA_DATA_ACTIVE)
+				posY = (getMenuStyle != 0x00) ? 64 : 54
+			else
+				posY = (getMenuStyle != 0x00) ? 48 : 40
+			
 			u32 selectedSlotData = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 			
 			bool nonCompletedSlot = u8[selectedSlotData + 0x00] == 0x00 && u8[A0 + 0x9a] != 0x00 && u8[A0 + 0x08] != 0x01
@@ -41,13 +52,6 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 				// Check if the sprite exists
 				if (Renderer.hasCustomSprite(key_label))
 				{
-				#if GAMEAPP >= 0x22051500
-					if (MOD_MANIA_DATA_ACTIVE)
-						posY = (System.getGlobalVariableValueByName("MenuStyle.dataSelect") != 0x00) ? 64 : 54
-					else
-						posY = (System.getGlobalVariableValueByName("MenuStyle.dataSelect") != 0x00) ? 48 : 40
-				#endif
-					
 					Renderer.drawCustomSprite(key_label, px, py - posY, 0x00, SPRITE_FLAG_PRIO, (posY > 48) ? 0xffff : renderQueue + 0x01)
 				}
 			}
