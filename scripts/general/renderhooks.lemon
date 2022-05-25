@@ -1,8 +1,8 @@
 //@ Function taken from sonic3air_dev/scripts/standalone/rendering/renderhooks.lemon
 function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
-	// Data select menu and main game (just one moment, while timer won't be updated)
-	if (global.game_mode == 0x4c || (global.game_mode == 0x0c && !hud.dirty.timer))
+	// Data select menu, main game (just one moment, while timer won't be updated), and DAGE custom menu
+	if (global.game_mode == 0x4c || (global.game_mode == 0x0c && !hud.dirty.timer) || global.game_mode == 0x58)
 	{
 		// Character portait
 		// - We render the act label in the character portait object

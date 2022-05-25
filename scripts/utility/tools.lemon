@@ -7,6 +7,8 @@ function void SaveZoneAct.modsCheck()
 	MOD_COMPLETE_STEST_ACTIVE	= Mods.isModActive("Sonic 3 Complete Sound Test")
 	// "Mania Style Data Select" by Agnoristos, check https://gamebanana.com/mods/323556
 	MOD_MANIA_DATA_ACTIVE	= Mods.isModActive("Mania Style Data Select")
+	// "Original zone order" by legobouwer9, check https://gamebanana.com/mods/54063
+	MOD_ORIGINAL_ZONE_ORDER_ACTIVE	= Mods.isModActive("Original zone order")
 }
 
 //? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
@@ -59,8 +61,8 @@ function u8 SaveZoneAct.getActualZoneID(u32 address)
 	u8 zoneID = u16[address + 0x36]
 	u8 actualZoneID = zoneID
 	
-	// "Original zone order" by legobouwer9, check https://gamebanana.com/mods/54063
-	if !(Mods.isModActive("Original zone order"))
+	// Override the order of zones matching the Original zone order mod
+	if !(MOD_ORIGINAL_ZONE_ORDER_ACTIVE)
 	{
 		if (zoneID >= 0x04 && zoneID <= 0x06)
 			++actualZoneID

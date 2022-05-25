@@ -9,6 +9,7 @@ Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zo
 * The logo has been changed.
 * Fixed when any Competition stage could be saved to the first save slot.
 * Fixed the disappearance of "Act X" label in Data Select when starting the game.
+* Fixed the disappearance of "Act X" label in Data Select when switching to the DAGE custom menu.
 
 ## Update v2.01 - Save my life
 
