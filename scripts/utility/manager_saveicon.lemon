@@ -1,4 +1,4 @@
-//? The main function of updating the save icon.
+// The main function of updating the save icon.
 function void SaveZoneAct.SaveIcon.update()
 {
 	if !(screen.saveicon.show)
@@ -34,7 +34,7 @@ function void SaveZoneAct.SaveIcon.update()
 	//debugLog(stringformat("%d, %d, %d", screen.saveicon.show, screen.saveicon.timer, screen.saveicon.alpha))
 }
 
-//? Save icon rendering function.
+// Save icon rendering function.
 function void SaveZoneAct.SaveIcon.overlay()
 {
 	// Updating the ring frame rate, but not at the levels, since already
@@ -52,7 +52,7 @@ function void SaveZoneAct.SaveIcon.overlay()
 	Renderer.drawCustomSprite("saveicon_glow", getScreenWidth() - 28, getScreenHeight() - 28, 0x00, SPRITE_FLAG_PRIO, 0xffff, 0x00, screen.saveicon.alpha)
 }
 
-//? Value setup function to show the save icon.
+// Value setup function to show the save icon.
 function void SaveZoneAct.SaveIcon.show()
 {
 	screen.saveicon.show = true

@@ -1,17 +1,4 @@
-//? Check the activity of mods and assign a value to globals.
-function void SaveZoneAct.modsCheck()
-{
-	// "Sonic 3 Complete Font" by Retro, check https://gamebanana.com/mods/334378
-	MOD_COMPLETE_FONT_ACTIVE	= Mods.isModActive("Sonic 3 Complete Font")
-	// "Sonic 3 Complete Sound Test" by mrgrassman14, check https://gamebanana.com/mods/361615
-	MOD_COMPLETE_STEST_ACTIVE	= Mods.isModActive("Sonic 3 Complete Sound Test")
-	// "Mania Style Data Select" by Agnoristos, check https://gamebanana.com/mods/323556
-	MOD_MANIA_DATA_ACTIVE	= Mods.isModActive("Mania Style Data Select")
-	// "Original zone order" by legobouwer9, check https://gamebanana.com/mods/54063
-	MOD_ORIGINAL_ZONE_ORDER_ACTIVE	= Mods.isModActive("Original zone order")
-}
-
-//? The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
+// The function is called when the first act passes, and when the zone is changed. Saves the current act in PersistentData after the title card.
 function void SaveZoneAct.onChangingZones()
 {
 	// Ignore for rolling demo and competition mode
@@ -54,7 +41,7 @@ function void SaveZoneAct.onChangingZones()
 	}
 }
 
-//? Returns the actual ID of the zone, matching the portait art zone in Data Select.
+// Returns the actual ID of the zone, matching the portait art zone in Data Select.
 function u8 SaveZoneAct.getActualZoneID(u32 address)
 {
 	// Setup variables
@@ -62,7 +49,7 @@ function u8 SaveZoneAct.getActualZoneID(u32 address)
 	u8 actualZoneID = zoneID
 	
 	// Override the order of zones matching the Original zone order mod
-	if !(MOD_ORIGINAL_ZONE_ORDER_ACTIVE)
+	if !(Mods.isModActive("Original zone order"))
 	{
 		if (zoneID >= 0x04 && zoneID <= 0x06)
 			++actualZoneID

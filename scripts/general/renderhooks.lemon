@@ -1,24 +1,25 @@
 //@ Function taken from sonic3air_dev/scripts/standalone/rendering/renderhooks.lemon
 function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
-	// Data select menu, main game (just one moment, while timer won't be updated), and DAGE custom menu
-	if (global.game_mode == 0x4c || (global.game_mode == 0x0c && !hud.dirty.timer) || global.game_mode == 0x58)
+	// Data select menu, main game (just one moment, while timer won't be updated), DAGE and Achievements Plus custom menu
+	if (global.game_mode == 0x4c || (global.game_mode == 0x0c && !hud.dirty.timer) || global.game_mode == 0x58 || global.game_mode == 0x9a)
 	{
 		// Character portait
 		// - We render the act label in the character portait object
 		if (objA0.update_address == 0x00d42c)
 		{
 			s16 posY
-			u8 getMenuStyle
+			u8 getMenuStyle = 0x01
 			
 		#if GAMEAPP >= 0x22051500
-			getMenuStyle = System.getGlobalVariableValueByName("MenuStyle.dataSelect")
+			if (Mods.isModActive("Data Select Character Sprites - MAIN"))
+				getMenuStyle = System.getGlobalVariableValueByName("MenuStyle.dataSelect")
 		#endif
 			
-			if (MOD_MANIA_DATA_ACTIVE)
-				posY = (getMenuStyle != 0x00) ? 64 : 54
+			if (Mods.isModActive("Mania Style Data Select"))
+				posY = (getMenuStyle == 0x00) ? 64 : 54
 			else
-				posY = (getMenuStyle != 0x00) ? 48 : 40
+				posY = (getMenuStyle == 0x00) ? 48 : 40
 			
 			u32 selectedSlotData = 0xffffe6ac + (0x0a * (dataselect.slot_selected - 0x01))
 			
@@ -29,18 +30,18 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 			{
 				// Define the number of the act
 				string key_act
-				if (MOD_MANIA_DATA_ACTIVE)
+				if (Mods.isModActive("Mania Style Data Select"))
 					key_act = stringformat("savelabel_mania_act_%d", u8[A0 + 0x9a])
-				else if (MOD_COMPLETE_FONT_ACTIVE || MOD_COMPLETE_STEST_ACTIVE)
+				else if (Mods.isModActive("Sonic 3 Complete Font") || Mods.isModActive("Sonic 3 Complete Sound Test"))
 					key_act = stringformat("savelabel_complete_act_%d", u8[A0 + 0x9a])
 				else
 					key_act = stringformat("savelabel_act_%d", u8[A0 + 0x9a])
 				
 				// Define the boss battle sprite
 				string key_boss
-				if (MOD_MANIA_DATA_ACTIVE)
+				if (Mods.isModActive("Mania Style Data Select"))
 					key_boss = "savelabel_mania_act_boss"
-				else if (MOD_COMPLETE_FONT_ACTIVE || MOD_COMPLETE_STEST_ACTIVE)
+				else if (Mods.isModActive("Sonic 3 Complete Font") || Mods.isModActive("Sonic 3 Complete Sound Test"))
 					key_boss = "savelabel_complete_act_boss"
 				else
 					key_boss = "savelabel_act_boss"

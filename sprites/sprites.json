@@ -8,7 +8,7 @@
 	"savelabel_act_1": { "File": "sprites/sprites_menu_act.png", "Rect": "53,27,48,8", "Center": "24,8" },
 	"savelabel_act_2": { "File": "sprites/sprites_menu_act.png", "Rect": "53,36,48,8", "Center": "24,8" },
 	"savelabel_act_3": { "File": "sprites/sprites_menu_act.png", "Rect": "53,45,48,8", "Center": "24,8" },
-	"savelabel_act_boss": { "File": "sprites/sprites_menu_act.png", "Rect": "54,54,48,8", "Center": "24,8" },
+	"savelabel_act_boss": { "File": "sprites/sprites_menu_act.png", "Rect": "53,54,48,8", "Center": "24,8" },
 	
 	// "Act 0 ~ 3" label (Needed Sonic 3 Complete Font / Sonic 3 Complete Sound Test mod)
 	"savelabel_complete_act_0": { "File": "sprites/sprites_menu_act.png", "Rect": "102,18,48,8", "Center": "24,8" },

@@ -1,13 +1,3 @@
-//@ Function taken from sonic3air_dev/scripts/standalone/enginecallbacks.lemon
-function void Init()
-{
-	// Check the activity of mods and assign a value to globals
-	SaveZoneAct.modsCheck()
-	
-	// Call the base function
-	base.Init()
-}
-
 //@ Function taken from sonic3air_dev/scripts/menus/dataselect.lemon
 function void DataSelect.sharedNewGameStartup()
 {
@@ -45,8 +35,8 @@ function void InitSaveSlots()
 //# address-hook(0x04e408) end(0x04e456)
 function void UpdateLevelDisplay()
 {
-	// So we fix the saving the second act of SOZ
-	if (global.zone_act == 0x0801)
+	// So we fix the saving the second act of SOZ and DEZ
+	if (global.zone_act == 0x0801 || global.zone_act == 0x0b01)
 	{
 		SaveZoneAct.onChangingZones()
 	}
@@ -92,7 +82,7 @@ function void fn00d8c4()
 	
 	// Deletion of saved data by Eggman (ТМ)
 	// - There are 2 ways to delete data. The first, standard, when you delete the save slot completely. The second deletes only the saved act data of the selected slot, the slots themselves will be saved, when pressing the [UP] key during the selection of [YES/NO] on the Eggman sign
-	if ((control.pad1.pressed & CONTROL_LEFT) || (control.pad1.pressed & CONTROL_UP))
+	if (control.pad1.pressed & (CONTROL_LEFT | CONTROL_UP))
 	{
 		// Slot address load
 		u32 slotAddress = 0xffffb128 + (0x4a * (dataselect.slot_selected - 0x01))
