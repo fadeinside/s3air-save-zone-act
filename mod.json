@@ -5,7 +5,7 @@
 		"Author": "FadeInside" ,
 		"Description": "Save the second act of the zone after closing the game. Do not deny yourself the pleasure of closing the game during the second act, making a tea, and enjoying the evening watching a movie.",
 		"URL": "https://github.com/fadeinside/s3air-save-zone-act/",
-		"ModVersion": "v2.02",
+		"ModVersion": "v2.03",
 		"GameVersion": "21.09.28.0"
 	}
 }

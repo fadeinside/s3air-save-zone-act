@@ -2,7 +2,14 @@
 
 Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zone-act
 
-## Update v2.02 - Origins vibes
+## Update v2.03: Eggs of Death
+
+* Fixed saving of the second act of Death Egg Zone.
+* Fixed incorrect position of "Act X" label in Data Select.
+* Fixed the disappearance of "Act X" label in Data Select when switching to the Achievements Plus custom menu.
+* Fixed incorrect mapping BOSS label.
+
+## Update v2.02: Origins vibes
 
 * Added an icon at the bottom of the screen notifying about zone saving/loading.
 * Now "Data Select Character Sprite Mod Support" by Veenee is no longer required as a necessary dependency.
@@ -11,7 +18,7 @@ Follow the latest changes on GitHub: https://github.com/fadeinside/s3air-save-zo
 * Fixed the disappearance of "Act X" label in Data Select when starting the game.
 * Fixed the disappearance of "Act X" label in Data Select when switching to the DAGE custom menu.
 
-## Update v2.01 - Save my life
+## Update v2.01: Save my life
 
 We have made several improvements to the mod, for a smoother gameplay. Thus, at the end of the first act, your score, lifes and continues will be saved, and also the saving of the second act in the Sandopolis Zone has been fixed. -Fade
 
@@ -19,7 +26,7 @@ We have made several improvements to the mod, for a smoother gameplay. Thus, at 
 * Fixed saving the second act in the Sandopolis Zone.
 * Adjustments to support latest changes of "Extra Slot Mighty" by iCloudius.
 
-## Release v1.0.2 (v2.0) - The Release 2
+## Release v1.0.2 (v2.0): The Release 2
 
 In this release we fix all possible bugs, add few new features, as well as widespread improvements for stability. Hope you enjoy it! -Fade
 
@@ -37,7 +44,7 @@ In this release we fix all possible bugs, add few new features, as well as wides
 * Fixed the disappear of main character art, if it was modified.
 * Improved functionality of the bug-correction script from previous versions. If it doesn't work and your save starts the wrong zone, then use the removal of the second act.
 
-## Update v1.0.1 (v1.01) - The bug-fix
+## Update v1.0.1 (v1.01): The bug-fix
 
 This small fix fixes the problem of saving bonus stages, and the inability to get out of them. If you encounter this, then just update the mod, and re-enter to your game slots to update data. -Fade
 
